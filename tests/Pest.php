@@ -28,7 +28,7 @@ uses(
 */
 
 expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
+    return $this->toBe(1);// @phpstan-ignore-line
 });
 
 /*

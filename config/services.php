@@ -34,6 +34,6 @@ return [
     'instagram' => [
         'app_id' => env("INSTAGRAM_APP_ID"),
         'app_secret' => env("INSTAGRAM_APP_SECRET"),
-        'redirect_uri' => env("INSTAGRAM_REDIRECT_URI", "https://audmqx.github.io/test_technique_bbs/auth"),
+        'redirect_uri' => env("INSTAGRAM_REDIRECT_URI", "https://audmqx.github.io/test_technique_bbs/instagram/auth"),
     ],
 ];

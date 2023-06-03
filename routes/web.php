@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InstagramController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('instagram')->group(function () {
+    Route::get('/get-code', [InstagramController::class, 'redirectToCallbackURL']);
+    Route::get('/auth', [InstagramController::class, 'handleCallback']);
 });

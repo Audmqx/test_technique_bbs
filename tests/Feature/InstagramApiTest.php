@@ -6,7 +6,6 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 
-use App\Services\InstagramApi\InstagramApi;
 use App\Services\InstagramApi\InstagramAuthorizationCodeExtractor;
 use App\Services\InstagramApi\InstagramAuthorizationUrlBuilder;
 use App\Services\InstagramApi\Mock\InstagramAuthorizationRedirectorMock;
@@ -28,7 +27,7 @@ class InstagramApiTest extends TestCase
 
         $callBackUrlStub = $authorizationRedirectorMock->redirectToInstagramAuthorisation($getConstructedUrl);
 
-        $codeExtractor = new InstagramAuthorizationCodeExtractor($authorizationUrlBuilder->getRedirectUri());
+        $codeExtractor = new InstagramAuthorizationCodeExtractor();
 
         $this->assertEquals("authCode", $codeExtractor->getCode($callBackUrlStub));
     }

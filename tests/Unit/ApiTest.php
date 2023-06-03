@@ -21,13 +21,8 @@ class ApiTest extends TestCase
       parent::setUp();
       $this->authorizationUrlBuilder = new InstagramAuthorizationUrlBuilder;
       $this->authorizationUrlBuilder->setRedirectUri(config('services.instagram.redirect_uri'));
-      $this->authorizationCodeExtractor = new InstagramAuthorizationCodeExtractor($this->authorizationUrlBuilder->getRedirectUri());
+      $this->authorizationCodeExtractor = new InstagramAuthorizationCodeExtractor();
       $this->dummyCallBackUrl =  InstagramAuthorizationRedirectorMock::redirectToInstagramAuthorisation();
-    }
-
-    public function test_that_callback_url_has_uri() :void
-    {
-      $this->assertTrue($this->authorizationCodeExtractor->isCallbackURLContainsUri($this->dummyCallBackUrl));
     }
 
     public function test_that_callback_url_has_code_parameter() :void

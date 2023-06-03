@@ -5,30 +5,33 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 
-use App\Services\InstagramApi;
+use App\Services\InstagramApi\InstagramAuthorizationUrlBuilder;
+use App\Services\InstagramApi\InstagramAuthorizationCodeExtractor;
+use App\Services\InstagramApi\Mock\InstagramAuthorizationRedirectorMock;
 
 
 class ApiTest extends TestCase
 {
-    public $instagramApiService;
-    private $callbackURL;
+    private $authorizationUrlBuilder;
+    private $authorizationCodeExtractor;
+    private $dummyCallBackUrl;
 
     public function setUp() :void
     {
       parent::setUp();
-      $this->instagramApiService = new InstagramApi;
-      $this->callbackURL = "https://audmqx.github.io/test_technique_bbs/auth?code=AQDa2gtcYapyeuofakR2M7jl5iC-gTy67lT3TP_FAdEAf-2n5dg8B-2-7bhXb4kfghygzl6z-RKp0GEv5gv6nAqyqbrBf";
-
+      $this->authorizationUrlBuilder = new InstagramAuthorizationUrlBuilder;
+      $this->authorizationUrlBuilder->setRedirectUri(config('services.instagram.redirect_uri'));
+      $this->authorizationCodeExtractor = new InstagramAuthorizationCodeExtractor($this->authorizationUrlBuilder->getRedirectUri());
+      $this->dummyCallBackUrl =  InstagramAuthorizationRedirectorMock::redirectToInstagramAuthorisation();
     }
 
     public function test_that_callback_url_has_uri() :void
     {
-      $this->instagramApiService->setRedirectUri(config('services.instagram.redirect_uri'));
-      $this->assertTrue($this->instagramApiService->isCallbackURLContainsUri($this->callbackURL));
+      $this->assertTrue($this->authorizationCodeExtractor->isCallbackURLContainsUri($this->dummyCallBackUrl));
     }
 
     public function test_that_callback_url_has_code_parameter() :void
     {
-      $this->assertTrue($this->instagramApiService->isCallbackURLContainsCodeParameter($this->callbackURL));
+      $this->assertTrue($this->authorizationCodeExtractor->isCallbackURLContainsCodeParameter($this->dummyCallBackUrl));
     }
 }

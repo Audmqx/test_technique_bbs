@@ -2,11 +2,11 @@
 
 namespace App\Services\InstagramApi;
 
-use App\Traits\httpClient;
+use App\Traits\HttpClient;
 
 class BasicDisplayParser
 {
-    use httpClient;
+    use HttpClient;
 
     private $userId;
     private $accesToken;

@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use GuzzleHttp\Client as GuzzleClient;
 
-trait httpClient
+trait HttpClient
 {
     private $client;
 

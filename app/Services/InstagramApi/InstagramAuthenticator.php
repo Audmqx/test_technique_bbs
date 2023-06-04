@@ -2,12 +2,11 @@
 
 namespace App\Services\InstagramApi;
 
-use App\Traits\httpClient;
-use Illuminate\Support\Facades\Http;
+use App\Traits\HttpClient;
 
 class InstagramAuthenticator
 {
-    use httpClient;
+    use HttpClient;
 
     private $code;
 

@@ -28,7 +28,7 @@ class InstagramApiTest extends TestCase
 
         $getConstructedUrl = $authorizationUrlBuilder->getConstructedUrl();
 
-        $callBackUrlStub = $authorizationRedirectorMock->redirectToInstagramAuthorisation($getConstructedUrl);
+        $callBackUrlStub = $authorizationRedirectorMock->redirectTo($getConstructedUrl);
 
         $codeExtractor = new AuthorizationCodeExtractor();
 

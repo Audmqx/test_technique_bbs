@@ -4,7 +4,7 @@ namespace App\Services\InstagramApi\Mock;
 
 class AuthorizationRedirectorMock
 {
-    public static function redirectToInstagramAuthorisation(string $url = "") :string
+    public static function redirectTo(string $url = "") :string
     {
         return "http://audmqx.github.io/test_technique_bbs/instagram/auth?code=authCode";
     }

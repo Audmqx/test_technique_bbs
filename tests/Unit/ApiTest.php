@@ -22,7 +22,7 @@ class ApiTest extends TestCase
       $this->authorizationUrlBuilder = new AuthorizationUrlBuilder;
       $this->authorizationUrlBuilder->setRedirectUri(config('services.instagram.redirect_uri'));
       $this->authorizationCodeExtractor = new AuthorizationCodeExtractor();
-      $this->dummyCallBackUrl =  AuthorizationRedirectorMock::redirectToInstagramAuthorisation();
+      $this->dummyCallBackUrl =  AuthorizationRedirectorMock::redirectTo();
     }
 
     public function test_that_callback_url_has_code_parameter() :void

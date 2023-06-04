@@ -2,7 +2,7 @@
 
 namespace App\Services\InstagramApi\Mock;
 
-class InstagramAuthorizationRedirectorMock
+class AuthorizationRedirectorMock
 {
     public static function redirectToInstagramAuthorisation(string $url = "") :string
     {

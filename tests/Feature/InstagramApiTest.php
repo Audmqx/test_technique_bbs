@@ -4,15 +4,13 @@ namespace Tests\Feature;
 
 
 use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 
-use App\Services\InstagramApi\InstagramAuthorizationCodeExtractor;
-use App\Services\InstagramApi\InstagramAuthorizationUrlBuilder;
-use App\Services\InstagramApi\Mock\InstagramAuthorizationRedirectorMock;
+use App\Services\InstagramApi\AuthorizationCodeExtractor;
+use App\Services\InstagramApi\AuthorizationUrlBuilder;
+use App\Services\InstagramApi\Mock\AuthorizationRedirectorMock;
 
-use App\Services\httpClient;
 use App\Services\InstagramApi\InstagramAuthenticator;
-use App\Services\InstagramApi\Mock\InstagramAuthenticatorFakerHttpSuccessful;
+use App\Services\InstagramApi\Fake\AuthenticatorFakerHttpSuccessful;
 
 
 //Récupérer les derniers posts (donc quelques posts pas tous ceux de la page) et les afficher sur une page.
@@ -22,8 +20,8 @@ class InstagramApiTest extends TestCase
    
     public function test_that_instagram_api_should_return_a_temp_code(): void
     {
-        $authorizationUrlBuilder = new InstagramAuthorizationUrlBuilder;
-        $authorizationRedirectorMock = new InstagramAuthorizationRedirectorMock;
+        $authorizationUrlBuilder = new AuthorizationUrlBuilder;
+        $authorizationRedirectorMock = new AuthorizationRedirectorMock;
      
         $authorizationUrlBuilder->setClientId(config('services.instagram.app_id'));
         $authorizationUrlBuilder->setRedirectUri(config('services.instagram.redirect_uri'));
@@ -32,14 +30,14 @@ class InstagramApiTest extends TestCase
 
         $callBackUrlStub = $authorizationRedirectorMock->redirectToInstagramAuthorisation($getConstructedUrl);
 
-        $codeExtractor = new InstagramAuthorizationCodeExtractor();
+        $codeExtractor = new AuthorizationCodeExtractor();
 
         $this->assertEquals("authCode", $codeExtractor->getCode($callBackUrlStub));
     }
 
     public function test_that_instagram_should_grant_access_token_in_exchange_of_temp_code(): void
     {
-        $httpClient = new InstagramAuthenticatorFakerHttpSuccessful();
+        $httpClient = new AuthenticatorFakerHttpSuccessful();
         $tokenAccessor = new InstagramAuthenticator;
      
         $response = $httpClient->post();

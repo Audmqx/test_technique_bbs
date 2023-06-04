@@ -4,7 +4,7 @@ namespace App\Services\InstagramApi;
 
 use App\Traits\UrlParser;
 
-class InstagramAuthorizationCodeExtractor
+class AuthorizationCodeExtractor
 {
     use UrlParser;
 

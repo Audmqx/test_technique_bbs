@@ -2,7 +2,7 @@
 
 namespace App\Services\InstagramApi;
 
-class InstagramAuthorizationUrlBuilder
+class AuthorizationUrlBuilder
 {
     private $clientID;
     private $redirectUri;

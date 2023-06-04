@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\InstagramApi\Mock;
+namespace App\Services\InstagramApi\Fake;
 
 use GuzzleHttp\Psr7\Response;
 
-class InstagramAuthenticatorFakerHttpSuccessful
+class AuthenticatorFakerHttpSuccessful
 {
     public function post()
     {

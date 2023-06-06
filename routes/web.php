@@ -19,7 +19,6 @@ Route::prefix('instagram')->group(function () {
 
     Route::prefix('get')->group(function () {
         Route::get('/code', [InstagramController::class, 'redirectToCallbackURL']);
-        Route::get('/token', [InstagramController::class, 'getToken']);
-        Route::get('/medias-ids', [InstagramController::class, 'getMediaIDS']);
+        Route::get('/user-medias', [InstagramController::class, 'getUserMedias'])->name('user-medias');
     });
 });

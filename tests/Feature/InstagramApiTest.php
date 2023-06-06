@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Services\InstagramApi\AuthorizationCodeExtractor;
 use App\Services\InstagramApi\AuthorizationUrlBuilder;
 use App\Services\InstagramApi\Mock\AuthorizationRedirectorMock;
+use Illuminate\Support\Facades\Cache;
 
 
 //Récupérer les derniers posts (donc quelques posts pas tous ceux de la page) et les afficher sur une page.
@@ -28,6 +29,9 @@ class InstagramApiTest extends TestCase
 
         $codeExtractor = new AuthorizationCodeExtractor();
 
-        $this->assertEquals("authCode", $codeExtractor->getCode($callBackUrlStub));
+        $this->assertTrue($codeExtractor->cacheCode($callBackUrlStub));
+        $this->assertTrue(Cache::has('instagram_code'));
+          
+        Cache::forget('instagram_code');
     }
 }

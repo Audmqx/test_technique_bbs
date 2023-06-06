@@ -2,11 +2,11 @@
 
 namespace App\Services\InstagramApi\Fake;
 
-use App\Services\InstagramApi\InstagramAuthenticator;
+use App\Services\InstagramApi\Authenticator;
 
-class InstagramAuthenticatorReturnsAnError extends InstagramAuthenticator
+class AuthenticatorReturnsAnError extends Authenticator
 {
-    public function getToken()
+    public function execute()
     {
         return [
             'error_message' => 'Invalid authorization code',

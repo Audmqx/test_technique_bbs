@@ -9,10 +9,14 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Services\InstagramApi\AuthorizationCodeExtractor;
 use App\Services\InstagramApi\AuthorizationUrlBuilder;
 use App\Helpers\Redirector;
-use App\Services\httpClient;
-use App\Services\InstagramApi\InstagramAuthenticator;
+use App\Services\InstagramApi\ApiServiceStrategy;
+use App\Services\InstagramApi\Authenticator;
 
 use App\Services\InstagramApi\BasicDisplayParser;
+use App\Services\InstagramApi\InstagramApiService as InstagramApiInstagramApiService;
+use App\Services\InstagramApi\UserMedias;
+use Illuminate\Support\Facades\Cache;
+
 
 class InstagramController extends BaseController
 {
@@ -34,33 +38,33 @@ class InstagramController extends BaseController
     public function handleCallback()
     {
         $codeExtractor = new AuthorizationCodeExtractor();
-        if ($code = $codeExtractor->getCode(url()->full())) {
-            session(['instagram_code' => $code]);
-            echo 'code setted';
+
+        if ($codeExtractor->cacheCode(url()->full())) {
+            $this->getUserMedias();
         }
     }
 
-    public function getToken()
+
+    public function getUserMedias($response = false)
     {
-        if (!session('instagram_code')){
-            return 'error with code';
+        $instagramApiService = new ApiServiceStrategy();
+
+        if (isset($response['error_type'])) {
+            dd($response);
         }
 
-        $tokenAccessor = new InstagramAuthenticator(session('instagram_code'));
-
-        return $tokenAccessor->getToken();
-    }
-
-    public function getMediaIDS()
-    {
-        $token = $this->getToken();
-
-        if (!isset($token['access_token'])) {
-            return 'error with token';
+        if (!Cache::has('instagram_code')) {
+            $this->redirectToCallbackURL();
         }
-
-        $basicDisplayParser = new BasicDisplayParser($token['user_id'], $token['access_token']);
         
-        return $basicDisplayParser->getMediasIDS();
+        if (!Cache::has('access_token')) {
+            $instagramApiService->setStrategy(new Authenticator(Cache::get('instagram_code')));
+            $response = $instagramApiService->execute();
+
+            $this->getUserMedias($response);
+        }
+
+        $instagramApiService->setStrategy(new UserMedias(Cache::get('access_token')));
+        return $instagramApiService->execute();
     }
 }

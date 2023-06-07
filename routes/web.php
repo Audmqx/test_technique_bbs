@@ -21,4 +21,6 @@ Route::prefix('instagram')->group(function () {
         Route::get('/code', [InstagramController::class, 'redirectToCallbackURL']);
         Route::get('/user-medias', [InstagramController::class, 'getUserMedias'])->name('user-medias');
     });
+
+    Route::get('/error', [InstagramController::class, 'showError'])->name('show-error');
 });

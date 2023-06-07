@@ -11,9 +11,6 @@ use App\Services\InstagramApi\AuthorizationUrlBuilder;
 use App\Helpers\Redirector;
 use App\Services\InstagramApi\ApiServiceStrategy;
 use App\Services\InstagramApi\Authenticator;
-
-use App\Services\InstagramApi\BasicDisplayParser;
-use App\Services\InstagramApi\InstagramApiService as InstagramApiInstagramApiService;
 use App\Services\InstagramApi\UserMedias;
 use Illuminate\Support\Facades\Cache;
 
@@ -25,14 +22,10 @@ class InstagramController extends BaseController
     public function redirectToCallbackURL()
     {
         $authorizationUrlBuilder = new AuthorizationUrlBuilder;
-        $authorizationRedirector = new Redirector;
-     
         $authorizationUrlBuilder->setClientId(config('services.instagram.app_id'));
         $authorizationUrlBuilder->setRedirectUri(config('services.instagram.redirect_uri'));
 
-        $getConstructedUrl = $authorizationUrlBuilder->getConstructedUrl();
-
-        $authorizationRedirector->redirectTo($getConstructedUrl);
+        Redirector::redirectTo($authorizationUrlBuilder->getConstructedUrl());
     }
 
     public function handleCallback()
@@ -45,14 +38,14 @@ class InstagramController extends BaseController
     }
 
 
-    public function getUserMedias($response = false)
+    public function getUserMedias($response = [])
     {
         $instagramApiService = new ApiServiceStrategy();
 
         if (isset($response['error_type'])) {
-            dd($response);
+            $this->handleError($response);
         }
-
+        
         if (!Cache::has('instagram_code')) {
             $this->redirectToCallbackURL();
         }
@@ -60,11 +53,24 @@ class InstagramController extends BaseController
         if (!Cache::has('access_token')) {
             $instagramApiService->setStrategy(new Authenticator(Cache::get('instagram_code')));
             $response = $instagramApiService->execute();
-
+          
             $this->getUserMedias($response);
         }
 
         $instagramApiService->setStrategy(new UserMedias(Cache::get('access_token')));
-        return $instagramApiService->execute();
+        return view('posts', ['posts' => $instagramApiService->execute()]);
+    }
+
+    public function showError()
+    {
+        if (Cache::has('error')) {
+            return view('welcome', ['errorBag' => Cache::get('error')]);
+        }
+    }
+
+    private function handleError(array $response)
+    {
+        Cache::set('error', $response);
+        Redirector::redirectTo(route('show-error'));
     }
 }

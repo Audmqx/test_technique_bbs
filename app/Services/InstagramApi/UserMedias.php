@@ -10,6 +10,7 @@ class UserMedias implements InstagramApiStrategyInterface
 {
     use HttpClient;
 
+    const MAXIMUM_POSTS_TO_FETCH = 5;
     private $accessToken;
 
     public function __construct(string $accessToken)
@@ -17,22 +18,23 @@ class UserMedias implements InstagramApiStrategyInterface
         $this->accessToken = $accessToken;
     }
 
-    public function setUrl(): string
+    public function execute()
     {
-        return "https://graph.instagram.com/";
+        $response = $this->get($this->setUrl(), $this->setParameters());
+        return json_decode($response->getBody(), true);
     }
 
-    public function setParameters(): array
+    private function setUrl(): string
+    {
+        return "https://graph.instagram.com/me/media/";
+    }
+
+    private function setParameters(): array
     {
         return [
                 'fields' => 'id,caption,media_type,media_url,username,timestamp,thumbnail_url,media_count',
-                'access_token' => $this->accessToken
+                'access_token' => $this->accessToken,
+                'limit' => self::MAXIMUM_POSTS_TO_FETCH,
                 ];
-    }
-
-    public function execute()
-    {
-        $response = $this->get($this->setUrl().'/me/media', $this->setParameters());
-        return json_decode($response->getBody(), true);
     }
 }
